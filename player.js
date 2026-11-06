@@ -14,7 +14,7 @@
     s.textContent =
       '.kkv{padding:.5rem 0;font-family:inherit}' +
       '.kkv-b{display:flex;align-items:center;gap:14px;width:72%;max-width:300px;min-width:180px;padding:14px 22px;border-radius:999px;' +
-      'background:rgba(180,150,120,.22);border:none;color:var(--text-primary,#2B2825);cursor:pointer;font:inherit;-webkit-tap-highlight-color:transparent}' +
+      'background:rgba(180,150,120,.22)!important;border:none!important;color:var(--text-primary,#2B2825);cursor:pointer;font:inherit;-webkit-tap-highlight-color:transparent}' +
       '.kkv-b svg{flex:none}' +
       '.kkv-w{display:flex;align-items:center;gap:4px;flex:1;min-width:0;overflow:hidden}' +
       '.kkv-w i{display:block;flex:none;width:3px;border-radius:2px;background:currentColor;opacity:.4;transition:opacity .2s}' +
