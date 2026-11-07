@@ -75,9 +75,16 @@
     var tx = R.getAttribute('data-t') || '', label = R.getAttribute('data-b') || '转中文', secs = R.getAttribute('data-s');
     if (!u || !k) return;
     css();
+    // 像微信一样按秒数变长：120px 起，每秒加 12px，300px 封顶（speak 的外壳用同一个算法）
+    var nb = BARS.length;
+    if (+secs > 0) {
+      var px = Math.min(300, 120 + 12 * secs);
+      R.style.width = px + 'px'; R.style.maxWidth = '100%'; R.style.minWidth = '0';
+      nb = Math.max(4, Math.round((px - 110) / 7));  // 波形条数跟着宽度走，每条 3px + 间隔 4px
+    }
     var ic = el('span', '', PLAY), w = el('span', 'kv3-w'), d = el('span', 'kv3-d'), m = el('p', 'kv3-m'), a = new Audio();
     d.textContent = secs ? secs + '″' : '··';
-    BARS.forEach(function (h) { var i = document.createElement('i'); i.style.height = h + 'px'; w.appendChild(i); });
+    for (var j = 0; j < nb; j++) { var bi = document.createElement('i'); bi.style.height = BARS[j % BARS.length] + 'px'; w.appendChild(bi); }
     R.innerHTML = '';
     R.appendChild(ic); R.appendChild(w); R.appendChild(d);
     R.setAttribute('role', 'button');
