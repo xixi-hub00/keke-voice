@@ -125,17 +125,20 @@
     function paint(f) { for (var i = 0; i < bars.length; i++) bars[i].className = i < Math.round(f * bars.length) ? 'on' : ''; }
     a.onloadedmetadata = function () { if (isFinite(a.duration)) d.textContent = Math.max(1, Math.round(a.duration)) + '″'; };
     a.ontimeupdate = function () { if (a.duration) paint(a.currentTime / a.duration); };
-    a.onplay = function () { ic.innerHTML = PAUSE; };
+    a.onplay = function () { ic.innerHTML = PAUSE; say(''); };
     a.onpause = function () { ic.innerHTML = PLAY; };
     a.onended = function () { ic.innerHTML = PLAY; paint(0); };
-    R.onclick = async function () {
-      try {
-        if (!a.paused) { a.pause(); return; }
-        if (!mp) say('加载中…');
-        await load();
-        NS.all.forEach(function (o) { if (o !== a && !o.paused) o.pause(); });
-        await a.play();
-      } catch (e) { if (mp) say('放不出来：' + String(e && e.message || e).slice(0, 60)); }
+    // iOS 只认点击当下直接调的 play()：语音没取好就不播，只提示；取好了在点击里同步调 play()，中间不 await
+    R.onclick = function () {
+      if (!a.paused) { a.pause(); return; }
+      if (!mp) {
+        say('还在取，好了再点一下');
+        load().then(function () { say('取好了，点一下就能放'); }, function () {});
+        return;
+      }
+      NS.all.forEach(function (o) { if (o !== a && !o.paused) o.pause(); });
+      var pr = a.play();
+      if (pr && pr.catch) pr.catch(function (e) { if (a.paused) say('放不出来，再点一下试试（' + String(e && e.name || e).slice(0, 30) + '）'); });
     };
     load().catch(function () {});
   }
